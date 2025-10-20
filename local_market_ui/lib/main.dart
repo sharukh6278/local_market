@@ -1,122 +1,185 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:local_market_ui/screens/account.dart';
+import 'package:local_market_ui/screens/auth_screen/login_screen.dart';
+import 'package:local_market_ui/screens/auth_screen/reset_password_screen.dart';
+import 'package:local_market_ui/screens/home.dart';
+import 'package:local_market_ui/screens/product_category.dart';
+import 'package:local_market_ui/screens/product_screen/add_product_screen/add_product_screen.dart';
+import 'package:local_market_ui/screens/shop_screen/add_shop_screen.dart';
+import 'package:local_market_ui/screens/special_product.dart';
+import 'package:local_market_ui/screens/user_screen/add_user_screen/add_user_screen.dart';
+import 'package:scaler/scaler.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import 'auth/models/user_model.dart';
+import 'common_utils/constants.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+void main() => runApp(
+  GetMaterialApp(
+    title: "this dmeo",
+    debugShowCheckedModeBanner: false,
+    //home: HomeWidget(),
+    theme: ThemeData(
+      // Define the default brightness and colors.
+      brightness: Brightness.light,
+      primaryColor: Colors.lightBlue,
+      hintColor: Colors.green,
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.lightBlue,
+        toolbarHeight: 50,
+        titleTextStyle: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+        iconTheme: IconThemeData(size: 10, color: Colors.white),
+        actionsIconTheme: IconThemeData(color: Colors.lightBlue),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.lightBlue,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: Colors.lightBlue,
+        foregroundColor: Colors.white,
+      ),
+    ),
+
+    initialRoute: '/',
+    routes: {
+      '/app': (context) => ApnaShopApp(),
+      '/': (context) => ApnaShopApp(),
+      '/login': (context) => LoginScreen(),
+      '/home': (context) => HomeScreen(),
+      '/special_product': (context) => SpecialProductScreen(),
+      '/product_category': (context) => ProductCategoryScreen(),
+      '/reset_password': (context) => ResetPasswordScreen(),
+      '/account': (context) => UserAccountDetailScreen(),
+      '/add_product': (context) => AddProductScreen(),
+      '/add_or_update_user': (context) => AddUserScreen(),
+      '/add_shop': (context) => AddShopScreen(),
+    },
+  ),
+);
+
+class ApnaShopApp extends StatefulWidget {
+  const ApnaShopApp({super.key});
+
+  @override
+  State<ApnaShopApp> createState() => _ApnaShopAppState();
+}
+
+class _ApnaShopAppState extends State<ApnaShopApp> {
+  final flutterSecureStorage = FlutterSecureStorage();
+  var email;
+  var userModel;
+  var apnaShopConstant = ApnaShopConstant.getApnaShopConstant();
+  bool showInProgress = true;
+
+  @override
+  void initState() {
+    showInProgress = true;
+    callForAsync();
   }
+
+  void callForAsync() {
+    flutterSecureStorage.read(key: "user").then((value) {
+      print("userModel as json String after retireve form storage :$value");
+      UserModel? userModel;
+      if (apnaShopConstant.getUserModel() != null) {
+        userModel = apnaShopConstant.getUserModel()!;
+      } else if (value != null) {
+        userModel = UserModel.fromJson(jsonDecode(value));
+      }
+
+      if (userModel != null) {
+        setState(() {
+          this.userModel = userModel;
+          email = userModel?.email;
+          showInProgress = false;
+        });
+      } else {
+        Navigator.pushNamed(apnaShopConstant.getContext(), '/login');
+      }
+    });
+
+    //    UserModel? userModel=apnaShopConstant.getUserModel()!=null?apnaShopConstant.getUserModel(): await apiClient.getUser(this.email);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    apnaShopConstant.setContext(context);
+    final arguments =
+        (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{})
+            as Map;
+    email = arguments["email"];
+    print("email form storage : $email");
+
+    showInProgress = false;
+    return Row(
+      children: [
+        SizedBox(
+          height: Scaler.height(1, context),
+          width: Scaler.width(1, context),
+          child: Visibility(
+            maintainSize: true,
+            maintainAnimation: true,
+            maintainState: true,
+            visible: !showInProgress,
+            child: HomeScreen(),
+          ),
+        ),
+
+        // Container(
+        //   height: Scaler.height(0.25, context),
+        //   width: Scaler.width(0.25, context),
+        //   child: Visibility(
+        //     child: CircularProgressIndicator(),
+        //     maintainSize: true,
+        //     maintainAnimation: true,
+        //     maintainState: true,
+        //     visible: showInProgress,
+        //   ),
+        // ),
+      ],
+    );
+
+    //   FutureBuilder<UserModel>(
+    //     future:  apiClient.getUser("srk@gmail.com"),
+    //     builder: (context, snapshotUser) {
+    //       print("user informatin ins  $email");
+    //       if (snapshotUser.connectionState == ConnectionState.waiting) {
+    //         return CircularProgressIndicator();
+    //       }
+    //       else if (snapshotUser.hasError) {
+    //         return  Container(
+    //           child: Text("hasError  while getting${snapshotUser.hasError.toString()}"),
+    //         );
+    //       }
+    //       else if (snapshotUser.hasData) {
+    //         UserModel? userModel = snapshotUser.data;
+    //         switch (UserRole.Shop_Owner) {
+    //           case UserRole.admin || UserRole.Shop_Owner:
+    //             return HomeWidget();
+    //
+    //           case UserRole.Shop_Helper:
+    //             return UserAccountDetails();
+    //           default:
+    //             return LoginWidget();
+    //         }
+    //       } else {
+    //         return Container(
+    //           child: Text("Error  while getting and preparing user info"),
+    //         );
+    //       }
+    //     }
+    // );
+  }
+
+  @override
+  void setState(VoidCallback fn) {}
 }
