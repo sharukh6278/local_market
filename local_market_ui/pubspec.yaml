@@ -122,3 +122,6 @@ flutter:
 #flutter pub cache clean
 #flutter pub get
 #flutter pub upgrade --major-versions`
+#    flutter config --enable-web
+#flutter run -d chrome --web-port=8081
+#flutter run -d web-server -web-port=8081

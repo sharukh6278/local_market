@@ -1,0 +1,34 @@
+meta {
+  name: getAllProduct
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8082/product/getAllProductList?shopName=Maharaja&productFetchType=SHOP_NAME&shopId=-1
+  body: json
+  auth: bearer
+}
+
+params:query {
+  shopName: Maharaja
+  productFetchType: SHOP_NAME
+  shopId: -1
+}
+
+headers {
+  : 
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJibG9ja2VkIjpmYWxzZSwicm9sZXMiOltdLCJlbWFpbCI6InNya0BnbWFpbC5jb20iLCJzdWIiOiJ7YmxvY2tlZD1mYWxzZSwgcm9sZXM9W10sIHNob3BOYW1lPW51bGwsIGVtYWlsPXNya0BnbWFpbC5jb219IiwiaWF0IjoxNzYxMDM0MTcyLCJleHAiOjE3NjE0NjYxNzJ9.v6QqzcT4v-u2ZXRI0-NvW5YGlEw2xfBmH7TH81SC2P43K7oUZMr9IxsR8Rf5NAejCF_RoENsGpxKFwKNMhDrcA
+}
+
+body:json {
+  {"pageNumber":0,"pageSize":20,"sortDirection":"DESC","sortColumn":"demo"}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

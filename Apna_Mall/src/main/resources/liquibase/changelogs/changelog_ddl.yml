@@ -1,0 +1,12 @@
+
+databaseChangeLog:
+  - changeSet:
+      id: "03_12_2024_15_43 user authorities table creating"
+      author: sharukh
+      comment: 03_12_2024_15_43 user authorities table creating
+      changes:
+        - sqlFile:
+            path: ../dbScripts/dml/data.sql
+            relativeToChangelogFile: true
+            stripComments: true
+            endDelimiter: ";"

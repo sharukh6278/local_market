@@ -1,0 +1,23 @@
+
+
+databaseChangeLog:
+  - changeSet:
+      id: "this dmeo"
+      author: sharukh
+      comment: this is dmeo
+      changes:
+        - sqlFile:
+            path: ../dbScripts/dml/data.sql
+            relativeToChangelogFile: true
+            stripComments: true
+            endDelimiter: ";"
+  - changeSet:
+      id: "inserting product category"
+      author: sharukh
+      comment: inserting product category
+      changes:
+        - sqlFile:
+            path: ../dbScripts/dml/insert_product_category.sql
+            relativeToChangelogFile: true
+            stripComments: true
+            endDelimiter: ";"

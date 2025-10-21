@@ -25,7 +25,7 @@ class ApnaShopConstant {
   UserModel? userModel;
   String? jwtToken;
   String? loggedInUserEmail;
-  final String baseUrl = "http://10.21.37.147:8082/";
+  final String baseUrl = "http://localhost:8082/";
   static final appName = "Apna Shop";
   final Dio dio = Dio();
 

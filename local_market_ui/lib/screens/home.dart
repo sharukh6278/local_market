@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local_market_ui/auth/models/input_page.dart';
 import 'package:local_market_ui/screens/account.dart';
 import 'package:local_market_ui/screens/product_category.dart';
 import 'package:local_market_ui/screens/product_screen/add_product_screen/product_image_screen.dart';
@@ -31,7 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
     print("home in callForAsync");
     List<Product> productlist = await apnaShopConstant
         .getProductApiClient()
-        .getProductListByShop("Maharaja");
+        .getProductListByShop(
+          new InputPage(0, 20, "DESC", ""),
+          "Maharaja",
+          "SHOP_NAME",
+          -1,
+        );
     print("this product linst in callForAsynch : $productlist");
   }
 
@@ -106,7 +112,12 @@ class _HomeScreenState extends State<HomeScreen> {
               child: FutureBuilder<List<Product>>(
                 future: apnaShopConstant
                     .getProductApiClient()
-                    .getProductListByShop("Maharaja"),
+                    .getProductListByShop(
+                      new InputPage(0, 20, "DESC", ""),
+                      "Maharaja",
+                      "SHOP_NAME",
+                      -1,
+                    ),
                 builder: (context, snapshot) {
                   print("product info :  ${snapshot.data}");
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -161,7 +172,12 @@ class _HomeScreenState extends State<HomeScreen> {
               child: FutureBuilder<List<Product>>(
                 future: apnaShopConstant
                     .getProductApiClient()
-                    .getProductListByShop("Maharaja"),
+                    .getProductListByShop(
+                      new InputPage(0, 20, "DSC", ""),
+                      "Maharaja",
+                      "SHOP_NAME",
+                      -1,
+                    ),
                 builder: (context, snapshot) {
                   print("product info :  ${snapshot.data}");
                   if (snapshot.connectionState == ConnectionState.waiting) {

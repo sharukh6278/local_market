@@ -31,17 +31,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final isValid = _formKey.currentState?.validate();
     print("Email : $email and password : $password");
-    if (!isValid!) {
-      return;
+    if (isValid!) {
+      print("isValid :  $isValid ");
+      // return;
     }
     _formKey.currentState?.save();
 
     print("getting jwt token");
     var jwtToken = await apnaShopConstant
         .getApiClient()
-        .login(
-          Login(emailController.value.text, passwordController.value.text),
-        )
+        .login(Login(emailController.value.text, passwordController.value.text))
         .then((jwtToken) {
           apnaShopConstant.setJWTToken(
             "${jwtToken.tokenType} ${jwtToken.accessToken}",
