@@ -100,37 +100,57 @@ class _AddImageScreenState extends State<AddImageScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 for (var file in productImageList)
-                  Container(
-                    child: InkWell(
-                      splashColor: Colors.lightBlue,
-                      onTap: () {
-                        if (file.path.isEmpty) {
-                          imagePickerOption();
-                        }
-                        print("car is clicked");
-                      },
-                      child: Card(
-                        color: Colors.black12,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: Scaler.height(0.2, context),
-                              width: Scaler.width(0.25, context),
-                              child: Container(
-                                child: file.path.isEmpty
-                                    ? Icon(Icons.add)
-                                    : Image.file(
-                                        file,
-                                        width: 170,
-                                        height: 170,
-                                        fit: BoxFit.cover,
-                                      ),
-                              ),
+                  Stack(
+                    children: [
+                      Container(
+                        child: InkWell(
+                          splashColor: Colors.lightBlue,
+                          onTap: () {
+                            if (file.path.isEmpty) {
+                              imagePickerOption();
+                            }
+                            print("car is clicked");
+                          },
+                          child: Card(
+                            color: Colors.black12,
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: Scaler.height(0.2, context),
+                                  width: Scaler.width(0.25, context),
+                                  child: Container(
+                                    child: file.path.isEmpty
+                                        ? Icon(Icons.add)
+                                        : Image.file(
+                                            file,
+                                            width: 170,
+                                            height: 170,
+                                            fit: BoxFit.cover,
+                                          ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                      if (file.path.isNotEmpty)
+                        Positioned(
+                          top: 5,
+                          right: 5,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                productImageList.remove(file);
+                              });
+                            },
+                            child: const Icon(
+                              Icons.cancel_outlined,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
               ],
             ),

@@ -66,7 +66,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
       null,
       null,
     );
-    apnaShopConstant.getApiClient().addShop([], jsonEncode(shop)).then((
+    apnaShopConstant.getApiClient().addShop([], jsonEncode(shop), 0).then((
       response,
     ) {
       print("add shop response : $response");

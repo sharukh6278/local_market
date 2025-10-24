@@ -7,15 +7,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.security.beans.CustomShopPage;
+import org.spring.security.entity.auth.User;
+import org.spring.security.entity.shop.Image;
 import org.spring.security.entity.shop.Product;
 import org.spring.security.entity.shop.Shop;
 import org.spring.security.exception.ApnaShopException;
 import org.spring.security.model.SearchByProductShopCategory;
-import org.spring.security.repository.ProductCategoryRepository;
-import org.spring.security.repository.ShopPagingAndSortingRepository;
-import org.spring.security.repository.ShopRepository;
-import org.spring.security.repository.UserRepository;
+import org.spring.security.repository.*;
 import org.spring.security.util.ApnaShopConstant;
+import org.spring.security.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -25,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ShopService {
@@ -49,6 +51,12 @@ public class ShopService {
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
 
+    @Autowired
+    private CommonUtil commonUtil;
+    @Autowired
+    private  ImageRepository imageRepository;
+
+
     public ShopService(HttpServletRequest httpServletRequest, ShopPagingAndSortingRepository shopPagingAndSortingRepository) {
         this.httpServletRequest = httpServletRequest;
         this.shopPagingAndSortingRepository = shopPagingAndSortingRepository;
@@ -59,26 +67,35 @@ public class ShopService {
         return userRepository.findByEmail(email).getShop();
     }
 
-    public Shop addShop(MultipartFile file,String shopAsString) throws JsonProcessingException {
+    public Shop addShop(MultipartFile[] files,String shopAsString,long shopId) throws JsonProcessingException {
         Shop shop=new ObjectMapper().readValue(shopAsString,Shop.class);
         logger.info("/addProduct :{}", shop);
-        try {
-
-            String filePath = httpServletRequest.getServletContext().getRealPath(ApnaShopConstant.FARWARD_SLASH) + shopImagePath;
-            File file232 = new File(filePath);
-            file232.mkdirs();
-            String fileContentType = file.getContentType();
-            String fileName = file.getOriginalFilename();
-            File fileToBeCopied = new File(filePath + ApnaShopConstant.FARWARD_SLASH + fileName);
-            file.transferTo(fileToBeCopied);
-
-            logger.info("file is save :{} ", fileToBeCopied.getAbsolutePath());
-            shop.setShopImageUrl(shopImagePath+ ApnaShopConstant.FARWARD_SLASH+fileName);
+        if(shopId==0){
+            List<Image> unSavedimageList=commonUtil.saveImages(files);
+            List<Image> imageList=unSavedimageList.stream().peek(image ->image.setShop(shop)).collect(Collectors.toList());
+            List<Image> savedImageList=imageRepository.saveAll(imageList);
+            shop.setImageList(savedImageList);
             return shopRepository.save(shop);
+        }
+        else{
+            Shop savedshop = shopRepository.findById(shopId);
+            if(savedshop==null ){
+                throw new ApnaShopException(500,"No Shop with id : "+shopId,"");
+            }
+            if(shop.getAddress()!=null && shop.getAddress().getPostalCode()!=savedshop.getAddress().getPostalCode()){
+                savedshop.setAddress(shop.getAddress());
+            }
+            savedshop.setOwnerEmail(shop.getOwnerEmail());
+            savedshop.setOwnerName(shop.getOwnerName());
+            savedshop.setOwnerPhoneNumber(shop.getOwnerPhoneNumber());
+            savedshop.setShopPhoneNumber(shop.getShopPhoneNumber());
+            savedshop.setShopAlternatePhoneNumber(shop.getShopAlternatePhoneNumber());
 
-        } catch (Exception e) {
-            logger.error("error in file saving :{}", e.getMessage());
-            throw new ApnaShopException(500, "error while saving product : " + e.getMessage(), e.getCause().toString());
+            imageRepository.deleteAll(savedshop.getImageList());
+            List<Image> unSavedimageList=commonUtil.saveImages(files);
+            List<Image> imageList=unSavedimageList.stream().peek(image ->image.setShop(savedshop)).collect(Collectors.toList());
+            imageRepository.saveAll(imageList);
+            return shopRepository.save(shop);
         }
     }
 

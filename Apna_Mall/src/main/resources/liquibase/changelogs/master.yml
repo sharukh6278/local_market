@@ -1,7 +1,5 @@
-
-
 databaseChangeLog:
-#  - include:
- #     file: liquibase/changelogs/changelog_ddl.yml
-#  - include:
-#      file: liquibase/changelogs/changelog_dml.yml
+  #  - include:
+  #     file: liquibase/changelogs/changelog_ddl.yml
+  - include:
+      file: liquibase/changelogs/changelog_dml.yml

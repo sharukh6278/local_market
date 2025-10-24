@@ -70,6 +70,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           onPressed: () {
             print("icon clicked");
+            apnaShopConstant.userModel = null;
+            apnaShopConstant.loggedInUserEmail = null;
           },
         ),
       ),

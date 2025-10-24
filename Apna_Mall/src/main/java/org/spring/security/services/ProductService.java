@@ -120,7 +120,6 @@ public class ProductService {
                 file.transferTo(fileToBeCopied);
 
                 Image productImage = new Image(fileName, productImagesPath+ ApnaShopConstant.FARWARD_SLASH+fileName, null, ApnaShopMediaType.IMAGE, fileContentType);
-
                 productImageList.add(imageRepository.save(productImage));
                 logger.info("file is save :{} ", fileToBeCopied.getAbsolutePath());
             }

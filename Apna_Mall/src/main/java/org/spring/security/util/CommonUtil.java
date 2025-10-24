@@ -40,10 +40,10 @@ public class CommonUtil {
         this.httpServletRequest = httpServletRequest;
     }
 
-    public List<Image> saveImages(MultipartFile[] files, Product persistedProduct, Shop persistedShop, ApnaShopMediaType apnaShopMediaType, boolean isProductUpdating) {
+    public List<Image> saveImages(MultipartFile[] files) {
         List<Image> productImageList = new ArrayList<>();
         try {
-            String filePath = httpServletRequest.getServletContext().getRealPath(ApnaShopConstant.FARWARD_SLASH) + (persistedProduct!=null?productImagesPath:shopImagesPath);
+            String filePath = httpServletRequest.getServletContext().getRealPath(ApnaShopConstant.FARWARD_SLASH) + productImagesPath;
             File file232 = new File(filePath);
             file232.mkdirs();
             for (MultipartFile file : files) {
@@ -52,13 +52,7 @@ public class CommonUtil {
                 File fileToBeCopied = new File(filePath + ApnaShopConstant.FARWARD_SLASH + fileName);
                 file.transferTo(fileToBeCopied);
 
-                Image productImage = new Image(fileName, (persistedProduct!=null?productImagesPath:shopImagesPath)+ ApnaShopConstant.FARWARD_SLASH+fileName, null, apnaShopMediaType, fileContentType);
-                if (isProductUpdating) {
-                    productImage.setProduct(persistedProduct);
-                } else {
-                    productImage.setProduct(null);
-                }
-                productImage.setShop(persistedShop);
+                Image productImage = new Image(fileName, productImagesPath+ ApnaShopConstant.FARWARD_SLASH+fileName, null, ApnaShopMediaType.IMAGE, fileContentType);
                 productImageList.add(imageRepository.save(productImage));
                 logger.info("file is save :{} ", fileToBeCopied.getAbsolutePath());
             }
@@ -69,7 +63,6 @@ public class CommonUtil {
         }
         return productImageList;
     }
-
 //
 //    public List<File> uploadFiles(MultipartFile[] files,String destinationFilePath) {
 //        List<File> uploadedFileList = new ArrayList<>();

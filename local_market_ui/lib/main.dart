@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -93,7 +91,7 @@ class _ApnaShopAppState extends State<ApnaShopApp> {
       if (apnaShopConstant.getUserModel() != null) {
         userModel = apnaShopConstant.getUserModel()!;
       } else if (value != null) {
-        userModel = UserModel.fromJson(jsonDecode(value));
+        //userModel = UserModel.fromJson(jsonDecode(value));
       }
 
       if (userModel != null) {
