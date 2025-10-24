@@ -1,16 +1,13 @@
 package org.spring.security.entity.shop;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.spring.security.entity.MandatoryFields;
 import org.spring.security.entity.auth.User;
-import org.spring.security.enums.CustomerType;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -50,7 +47,7 @@ public class Product extends MandatoryFields implements Serializable {
 
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    List<ProductImage> productImageList;
+    List<Image> imageList;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<AdditionalAttribute> additionalAttributeList;

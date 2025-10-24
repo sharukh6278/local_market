@@ -5,12 +5,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.security.entity.auth.JWTToken;
-import org.spring.security.entity.auth.Role;
 import org.spring.security.entity.auth.User;
 import org.spring.security.config.JwtTokenUtil;
-import org.spring.security.entity.shop.ProductImage;
+import org.spring.security.entity.shop.Image;
 import org.spring.security.entity.shop.Shop;
-import org.spring.security.enums.ApnaShopMediaType;
 import org.spring.security.exception.ApnaShopException;
 import org.spring.security.model.FridayResponse;
 import org.spring.security.model.LoginRequest;
@@ -147,7 +145,7 @@ public class UserService {
 
 
     public User updateProfilePhoto(MultipartFile[] files, String email) {
-        List<ProductImage> productImageList = new ArrayList<>();
+        List<Image> productImageList = new ArrayList<>();
         try {
             String filePath = httpServletRequest.getServletContext().getRealPath(ApnaShopConstant.FARWARD_SLASH) + userImagesPath;
             File file232 = new File(filePath);

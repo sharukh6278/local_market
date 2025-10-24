@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:local_market_ui/screens/image_screen/add_image_screen.dart';
 import 'package:scaler/scaler.dart';
 
 import '../../auth/models/shop.dart';
@@ -64,7 +66,9 @@ class _AddShopScreenState extends State<AddShopScreen> {
       null,
       null,
     );
-    apnaShopConstant.getApiClient().addShop(shop).then((response) {
+    apnaShopConstant.getApiClient().addShop([], jsonEncode(shop)).then((
+      response,
+    ) {
       print("add shop response : $response");
     });
   }
@@ -162,46 +166,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
           child: Container(
             child: Column(
               children: [
-                SizedBox(
-                  height: Scaler.height(0.2, context),
-                  width: Scaler.width(0.25, context),
-                  child: Container(
-                    child: InkWell(
-                      splashColor: Colors.lightBlue,
-                      onTap: () {
-                        if (pickedImage.path.isEmpty) {
-                          imagePickerOption();
-                        }
-                        print("car is clicked");
-                      },
-                      child: SizedBox(
-                        height: Scaler.height(0.19, context),
-                        child: Card(
-                          color: Colors.black12,
-                          child: Column(
-                            children: [
-                              Center(
-                                child: SizedBox(
-                                  height: Scaler.height(0.18, context),
-                                  width: Scaler.width(0.25, context),
-                                  child: Container(
-                                    child: pickedImage.path.isEmpty
-                                        ? Icon(Icons.add)
-                                        : Image.file(
-                                            pickedImage,
-
-                                            fit: BoxFit.cover,
-                                          ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                AddImageScreen(),
                 SizedBox(
                   height: Scaler.height(0.5, context),
                   child: SingleChildScrollView(

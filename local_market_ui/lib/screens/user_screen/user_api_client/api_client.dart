@@ -34,6 +34,10 @@ abstract class ApiClient {
     @Query("shopName") String shopName,
   );
 
+  @MultiPart()
   @POST(Apis.addShop)
-  Future<UserModel> addShop(@Body() Shop shop);
+  Future<List<Shop>> addShop(
+    @Part(name: 'files') List<MultipartFile> files,
+    @Part(name: "shop") String shop,
+  );
 }

@@ -103,14 +103,20 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<UserModel> addShop(Shop shop) async {
+  Future<List<Shop>> addShop(List<MultipartFile> files, String shop) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(shop.toJson());
-    final _options = _setStreamType<UserModel>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+    final _data = FormData();
+    _data.files.addAll(files.map((i) => MapEntry('files', i)));
+    _data.fields.add(MapEntry('shop', shop));
+    final _options = _setStreamType<List<Shop>>(
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'multipart/form-data',
+          )
           .compose(
             _dio.options,
             '/shop/addShop',
@@ -119,10 +125,12 @@ class _ApiClient implements ApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late UserModel _value;
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<Shop> _value;
     try {
-      _value = UserModel.fromJson(_result.data!);
+      _value = _result.data!
+          .map((dynamic i) => Shop.fromJson(i as Map<String, dynamic>))
+          .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

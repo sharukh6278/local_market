@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.security.beans.CustomShopPage;
 import org.spring.security.entity.shop.Product;
-import org.spring.security.entity.shop.ProductImage;
 import org.spring.security.entity.shop.Shop;
 import org.spring.security.exception.ApnaShopException;
 import org.spring.security.model.SearchByProductShopCategory;
@@ -25,9 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ShopService {

@@ -49,4 +49,7 @@ public class Shop  extends MandatoryFields implements Serializable  {
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     List<Product> productList;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    List<Image> imageList;
 }

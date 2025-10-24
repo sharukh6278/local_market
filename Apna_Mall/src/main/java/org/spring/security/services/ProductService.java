@@ -9,7 +9,7 @@ import org.spring.security.beans.CustomProductPage;
 import org.spring.security.entity.auth.User;
 import org.spring.security.entity.shop.Product;
 import org.spring.security.entity.shop.ProductCategory;
-import org.spring.security.entity.shop.ProductImage;
+import org.spring.security.entity.shop.Image;
 import org.spring.security.entity.shop.Shop;
 import org.spring.security.enums.ApnaShopMediaType;
 import org.spring.security.exception.ApnaShopException;
@@ -19,15 +19,14 @@ import org.spring.security.repository.*;
 import org.spring.security.util.ApnaShopConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class ProductService {
@@ -49,7 +48,7 @@ public class ProductService {
 
     private final HttpServletRequest httpServletRequest;
 
-    private final ProductImageRepository productImageRepository;
+    private final ImageRepository imageRepository;
 
     private final ProductPagingAndSortingRepository productPagingAndSortingRepository;
     private  final AdditionalAttributeRepository additionalAttributeRepository;
@@ -58,13 +57,13 @@ public class ProductService {
     @Value("${apna_shop.product_images_path}")
     String productImagesPath;
 
-    public ProductService(ProductRepository productRepository, UserRepository userRepository, ProductReviewRepository productReviewRepository, ShopRepository shopRepository, HttpServletRequest httpServletRequest, ProductImageRepository productImageRepository, ProductPagingAndSortingRepository productPagingAndSortingRepository, ProductCategoryRepository productCategoryRepository, AdditionalAttributeRepository additionalAttributeRepository) {
+    public ProductService(ProductRepository productRepository, UserRepository userRepository, ProductReviewRepository productReviewRepository, ShopRepository shopRepository, HttpServletRequest httpServletRequest, ImageRepository imageRepository, ProductPagingAndSortingRepository productPagingAndSortingRepository, ProductCategoryRepository productCategoryRepository, AdditionalAttributeRepository additionalAttributeRepository) {
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.productReviewRepository = productReviewRepository;
         this.shopRepository = shopRepository;
         this.httpServletRequest = httpServletRequest;
-        this.productImageRepository = productImageRepository;
+        this.imageRepository = imageRepository;
         this.productPagingAndSortingRepository = productPagingAndSortingRepository;
         this.productCategoryRepository = productCategoryRepository;
         this.additionalAttributeRepository = additionalAttributeRepository;
@@ -78,7 +77,10 @@ public class ProductService {
             product.setUser(user);
             Shop shop = user.getShop();
             product.setShop(shop);
-            product.setProductImageList(saveProductImages(files));
+            List<Image> unSavedimageList=saveProductImages(files);
+            List<Image> imageList=unSavedimageList.stream().peek(image ->image.setProduct(product)).collect(Collectors.toList());
+            List<Image> savedImageList=imageRepository.saveAll(imageList);
+            product.setImageList(savedImageList);
             return productRepository.save(product);
         }
         else{
@@ -87,23 +89,26 @@ public class ProductService {
             product.setUser(user);
             Shop shop = user.getShop();
             product.setShop(shop);
-            product.setProductImageList(saveProductImages(files));
-            product.setId(productId);
             Optional<Product> persistedProduct=productRepository.findById(productId);
             if(persistedProduct.isEmpty() ){
                 throw new ApnaShopException(500,"No Product with id : "+productId,"");
             }
             additionalAttributeRepository.deleteAllByproduct(persistedProduct.get());
-            productImageRepository.deleteAllByproduct(persistedProduct.get());
+            imageRepository.deleteAllByproduct(persistedProduct.get());
+            List<Image> unSavedimageList=saveProductImages(files);
+            List<Image> imageList=unSavedimageList.stream().peek(image ->image.setProduct(product)).collect(Collectors.toList());
+            List<Image> savedImageList=imageRepository.saveAll(imageList);
 
+            product.setImageList(savedImageList);
+            product.setId(productId);
             return productRepository.save(product);
         }
 
 
     }
 
-    public List<ProductImage> saveProductImages(MultipartFile[] files) {
-        List<ProductImage> productImageList = new ArrayList<>();
+    public List<Image> saveProductImages(MultipartFile[] files) {
+        List<Image> productImageList = new ArrayList<>();
         try {
             String filePath = httpServletRequest.getServletContext().getRealPath(ApnaShopConstant.FARWARD_SLASH) + productImagesPath;
             File file232 = new File(filePath);
@@ -114,9 +119,9 @@ public class ProductService {
                 File fileToBeCopied = new File(filePath + ApnaShopConstant.FARWARD_SLASH + fileName);
                 file.transferTo(fileToBeCopied);
 
-                ProductImage productImage = new ProductImage(fileName, productImagesPath+ ApnaShopConstant.FARWARD_SLASH+fileName, null, ApnaShopMediaType.IMAGE, fileContentType);
+                Image productImage = new Image(fileName, productImagesPath+ ApnaShopConstant.FARWARD_SLASH+fileName, null, ApnaShopMediaType.IMAGE, fileContentType);
 
-                productImageList.add(productImageRepository.save(productImage));
+                productImageList.add(imageRepository.save(productImage));
                 logger.info("file is save :{} ", fileToBeCopied.getAbsolutePath());
             }
 
@@ -220,24 +225,24 @@ public class ProductService {
     }
 
     public FridayResponse deleteProductImage(long id) {
-        Optional<ProductImage> optionalProductImage=productImageRepository.findById(id);
+        Optional<Image> optionalProductImage=imageRepository.findById(id);
         if(optionalProductImage.isEmpty()){
             throw new ApnaShopException(403,"No Porduct Image for id : "+id,"");
         }
         File file=new File(optionalProductImage.get().getFilePath());
         file.deleteOnExit();
-        productImageRepository.delete(optionalProductImage.get());
+        imageRepository.delete(optionalProductImage.get());
         return new FridayResponse(null,"Product Image is Deleted");
     }
 
-    public ProductImage addProductImage(MultipartFile[] files, long productId) {
+    public Image addProductImage(MultipartFile[] files, long productId) {
         Optional<Product> optionalProduct=productRepository.findById(productId);
         if(optionalProduct.isEmpty()){
             throw new ApnaShopException(403,"No Product found with product id : "+productId,"");
         }
-        List<ProductImage> productImageList=saveProductImages(files);
-        ProductImage productImage=productImageList.get(0);
+        List<Image> productImageList=saveProductImages(files);
+        Image productImage=productImageList.get(0);
         productImage.setProduct(optionalProduct.get());
-        return productImageRepository.save(productImage);
+        return imageRepository.save(productImage);
     }
 }

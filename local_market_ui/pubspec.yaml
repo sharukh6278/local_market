@@ -125,3 +125,5 @@ flutter:
 #    flutter config --enable-web
 #flutter run -d chrome --web-port=8081
 #flutter run -d web-server -web-port=8081
+#flutter devices
+#flutter run  -d 2312DRA50I

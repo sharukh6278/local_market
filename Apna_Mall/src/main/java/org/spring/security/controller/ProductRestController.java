@@ -6,10 +6,9 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spring.security.beans.CustomProductPage;
-import org.spring.security.beans.CustomShopPage;
 import org.spring.security.entity.shop.Product;
 import org.spring.security.entity.shop.ProductCategory;
-import org.spring.security.entity.shop.ProductImage;
+import org.spring.security.entity.shop.Image;
 import org.spring.security.model.FridayResponse;
 import org.spring.security.model.InputPage;
 import org.spring.security.services.ProductService;
@@ -19,11 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.io.File;
 import java.io.IOException;
@@ -159,7 +156,7 @@ public class ProductRestController {
     }
 
     @PostMapping("/addProductImage")
-    public ProductImage addProductImage(@RequestParam("files") MultipartFile[] files, @RequestParam("productId") long productId){
+    public Image addProductImage(@RequestParam("files") MultipartFile[] files, @RequestParam("productId") long productId){
         return productService.addProductImage(files,productId);
     }
 

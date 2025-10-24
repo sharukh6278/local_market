@@ -9,8 +9,8 @@ import org.spring.security.enums.ApnaShopMediaType;
 
 @Getter
 @Setter
-@Entity(name = "product_image")
-public class ProductImage   extends MandatoryFields {
+@Entity(name = "Image")
+public class Image extends MandatoryFields {
 
     private String fileName;
 
@@ -20,11 +20,15 @@ public class ProductImage   extends MandatoryFields {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
+
     private ApnaShopMediaType   apnaShopMediaType;
 
     private String contentType;
 
-    public ProductImage(String fileName, String filePath, Product product, ApnaShopMediaType apnaShopMediaType, String contentType) {
+    public Image(String fileName, String filePath, Product product, ApnaShopMediaType apnaShopMediaType, String contentType) {
         this.fileName = fileName;
         this.filePath = filePath;
         this.product = product;
