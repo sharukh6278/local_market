@@ -103,13 +103,18 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<List<Shop>> addShop(List<MultipartFile> files, String shop) async {
+  Future<List<Shop>> addShop(
+    List<MultipartFile> files,
+    String shop,
+    int shopId,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = FormData();
     _data.files.addAll(files.map((i) => MapEntry('files', i)));
     _data.fields.add(MapEntry('shop', shop));
+    _data.fields.add(MapEntry('shopId', shopId.toString()));
     final _options = _setStreamType<List<Shop>>(
       Options(
             method: 'POST',

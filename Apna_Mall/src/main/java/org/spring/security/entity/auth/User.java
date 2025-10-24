@@ -16,7 +16,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Table(name = "apna_shop_users")
+@Table(name = "user")
 @Entity
 @Getter
 @Setter

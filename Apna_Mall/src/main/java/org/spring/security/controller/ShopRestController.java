@@ -37,10 +37,10 @@ public class ShopRestController {
     }
 
     @PostMapping("/addShop")
-   public Shop addShop(@RequestParam("files") List<MultipartFile> files, @RequestParam("shop") String shopString) throws JsonProcessingException {
+   public Shop addShop(@RequestParam("files") MultipartFile[] files, @RequestParam("shop") String shopString,@RequestParam(value = "shopId",required = false) long shopId) throws JsonProcessingException {
         //return Mono.fromCallable(()->shopService.addShop(files.get(0),shopString))
           //      .map(savedShop-> ResponseEntity.ok(savedShop));
-        return shopService.addShop(files.get(0),shopString);
+        return shopService.addShop(files,shopString,shopId);
     }
 
     @GetMapping("/getAllShop")

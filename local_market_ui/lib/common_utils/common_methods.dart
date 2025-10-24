@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:dio/src/multipart_file.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:local_market_ui/common_utils/constants.dart';
 import 'package:scaler/scaler.dart';
@@ -80,5 +82,60 @@ class CommonMethods {
     } catch (error) {
       debugPrint(error.toString());
     }
+  }
+
+  File compressAndResizeImage(File file) {
+    img.Image? image = img.decodeImage(file.readAsBytesSync());
+
+    // Resize the image to have the longer side be 800 pixels
+    int width;
+    int height;
+
+    if (image!.width > image.height) {
+      width = 800;
+      height = (image.height / image.width * 800).round();
+    } else {
+      height = 800;
+      width = (image.width / image.height * 800).round();
+    }
+
+    img.Image resizedImage = img.copyResize(
+      image,
+      width: width,
+      height: height,
+    );
+
+    // Compress the image with JPEG format
+    List<int> compressedBytes = img.encodeJpg(
+      resizedImage,
+      quality: 85,
+    ); // Adjust quality as needed
+
+    // Save the compressed image to a file
+    File compressedFile = File(
+      file.path.replaceFirst('.jpg', '_compressed.jpg'),
+    );
+    compressedFile.writeAsBytesSync(compressedBytes);
+
+    return compressedFile;
+  }
+
+  Future<List<dio.MultipartFile>> toMultiPartFiles(
+    List<File> compressedFileList,
+  ) async {
+    final multipartFiles = <dio.MultipartFile>[];
+
+    for (final file in compressedFileList) {
+      if (file.path.isNotEmpty) {
+        final fileBytes = await file.readAsBytes();
+        final multipartFile = dio.MultipartFile.fromBytes(
+          fileBytes,
+          filename: file.path.split('/').last,
+          contentType: dio.DioMediaType('application', 'octet-stream'),
+        );
+        multipartFiles.add(multipartFile);
+      }
+    }
+    return multipartFiles;
   }
 }

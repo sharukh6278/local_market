@@ -39,6 +39,6 @@ abstract class ApiClient {
   Future<List<Shop>> addShop(
     @Part(name: 'files') List<MultipartFile> files,
     @Part(name: "shop") String shop,
-    @Part(name:"shopId") int shopId)
+    @Part(name: "shopId") int shopId,
   );
 }

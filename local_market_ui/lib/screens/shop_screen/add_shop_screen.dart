@@ -9,7 +9,9 @@ import 'package:local_market_ui/screens/image_screen/add_image_screen.dart';
 import 'package:scaler/scaler.dart';
 
 import '../../auth/models/shop.dart';
+import '../../common_utils/common_methods.dart';
 import '../../common_utils/constants.dart';
+import '../image_screen/image_controller.dart';
 
 class AddShopScreen extends StatefulWidget {
   const AddShopScreen({super.key});
@@ -30,6 +32,7 @@ class _AddShopScreenState extends State<AddShopScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   ApnaShopConstant apnaShopConstant = ApnaShopConstant.getApnaShopConstant();
+  CommonMethods commonMethods = CommonMethods.commonMethods;
   File pickedImage = File("");
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
@@ -66,11 +69,20 @@ class _AddShopScreenState extends State<AddShopScreen> {
       null,
       null,
     );
-    apnaShopConstant.getApiClient().addShop([], jsonEncode(shop), 0).then((
-      response,
-    ) {
-      print("add shop response : $response");
-    });
+    List<File> compressedFileList = [];
+    for (File file in ImageController.images) {
+      if (file.path.isEmpty) continue;
+      compressedFileList.add(commonMethods.compressAndResizeImage(file));
+    }
+    final multipartFiles = await commonMethods.toMultiPartFiles(
+      compressedFileList,
+    );
+    apnaShopConstant
+        .getApiClient()
+        .addShop(multipartFiles, jsonEncode(shop), 0)
+        .then((response) {
+          print("add shop response : $response");
+        });
   }
 
   Future<void> pickImage(ImageSource imageType) async {

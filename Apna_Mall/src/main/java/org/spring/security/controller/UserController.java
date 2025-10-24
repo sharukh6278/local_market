@@ -21,7 +21,6 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET, RequestMethod.DELETE, RequestMethod.PUT}, path = "/user")
-@CrossOrigin(origins = "http://localhost:54902/")
 public class UserController {
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -40,14 +39,12 @@ public class UserController {
         return userService.updateUser(user);
     }
 
-    @CrossOrigin(origins = "http://localhost:54902")
     @PostMapping(value = "/login")
     public JWTToken login(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         logger.info("UserController :login : {}", loginRequest);
         return userService.login(loginRequest, httpServletRequest, httpServletResponse);
     }
 
-    @CrossOrigin(origins = "http://localhost:54902")
     @GetMapping("/getUser")
     public User getUser(@RequestParam("email") String email) {
         logger.info("UserController :login : {}", email);

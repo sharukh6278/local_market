@@ -12,7 +12,7 @@ class Shop {
   double? shopPhoneNumber;
   double? shopAlternatePhoneNumber;
   String? createdDate;
-  String? updateDate;
+  String? updatedDate;
   String? imageurl;
 
   Shop(
@@ -25,7 +25,7 @@ class Shop {
     this.imageurl,
     this.shopAlternatePhoneNumber,
     this.createdDate,
-    this.updateDate,
+    this.updatedDate,
   );
 
   factory Shop.fromJson(Map<String, dynamic> json) => _$ShopFromJson(json);

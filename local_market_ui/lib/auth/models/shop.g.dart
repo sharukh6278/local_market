@@ -16,7 +16,7 @@ Shop _$ShopFromJson(Map<String, dynamic> json) => Shop(
   json['imageurl'] as String?,
   (json['shopAlternatePhoneNumber'] as num?)?.toDouble(),
   json['createdDate'] as String?,
-  json['updateDate'] as String?,
+  json['updatedDate'] as String?,
 );
 
 Map<String, dynamic> _$ShopToJson(Shop instance) => <String, dynamic>{
@@ -28,6 +28,6 @@ Map<String, dynamic> _$ShopToJson(Shop instance) => <String, dynamic>{
   'shopPhoneNumber': instance.shopPhoneNumber,
   'shopAlternatePhoneNumber': instance.shopAlternatePhoneNumber,
   'createdDate': instance.createdDate,
-  'updateDate': instance.updateDate,
+  'updatedDate': instance.updatedDate,
   'imageurl': instance.imageurl,
 };

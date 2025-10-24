@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scaler/scaler.dart';
 
+import 'image_controller.dart';
+
 class AddImageScreen extends StatefulWidget {
   const AddImageScreen({super.key});
 
@@ -12,10 +14,17 @@ class AddImageScreen extends StatefulWidget {
   State<AddImageScreen> createState() => _AddImageScreenState();
 }
 
-List<File> productImageList = [File("")];
+//List<File> productImageList = [File("")];
 
 class _AddImageScreenState extends State<AddImageScreen> {
   File? pickedImage;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ImageController.images = [File("")];
+  }
 
   void imagePickerOption() {
     Get.bottomSheet(
@@ -76,7 +85,10 @@ class _AddImageScreenState extends State<AddImageScreen> {
 
       setState(() {
         pickedImage = tempImage;
-        productImageList.insert(productImageList.length - 1, tempImage);
+        ImageController.images.insert(
+          ImageController.images.length - 1,
+          tempImage,
+        );
       });
 
       Get.back();
@@ -99,7 +111,7 @@ class _AddImageScreenState extends State<AddImageScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                for (var file in productImageList)
+                for (var file in ImageController.images)
                   Stack(
                     children: [
                       Container(
@@ -141,7 +153,7 @@ class _AddImageScreenState extends State<AddImageScreen> {
                           child: GestureDetector(
                             onTap: () {
                               setState(() {
-                                productImageList.remove(file);
+                                ImageController.images.remove(file);
                               });
                             },
                             child: const Icon(
